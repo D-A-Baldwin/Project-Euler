@@ -1,0 +1,21 @@
+# Starting in the top left corner of a 2x2 grid, and only being able to move to the right and down, 
+# there are exactly 6 routes to the bottom right corner.
+# How many such routes are there through a 20x20 grid?
+
+# Let moving once down be represented by 0 and moving once right be represented by 1, then any state of
+# the grid is given by a lenght 20 vector with 20 zeroes and 20 ones in some order.
+# This is a combinatorics problem. 
+# We want all non-equivalent arrangements of these zeroes and ones.
+# We can use the GAP function Arrangements to do this.
+
+# L := List([1..20], i-> 0);
+# Append(L, List([1..20], i-> 1));
+# arr := Arrangements(L, 40);; #This is an enormous list that gives all possible states of the grid explicitly
+# Print("Answer is: ", Length(arr)); #This takes a long time 
+
+# If you just care about the number of states and not the actual states themselves, there is a better way... 
+
+# This number is given by the number of all possible permutations of the list, divided by the possible
+# permutations of the zeroes times the possible permutations of the ones. i.e. 40!/(20! * 20!)
+
+Print("Answer is: ", Factorial(40) / (Factorial(20)^2));
