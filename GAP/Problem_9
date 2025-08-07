@@ -1,0 +1,12 @@
+# There exists exactly one Pythagorean triplet for which a+b+c = 1000
+# Find the product abc.
+
+upper_bound := 500;;
+
+triples_list := UnorderedTuples(Set([1..upper_bound]), 2);;
+
+triples_list := List(triples_list, i -> [i[1],i[2], 1000-i[1]-i[2]]);;
+
+pythag_list := Filtered(triples_list, i -> i[1]^2 + i[2]^2 = i[3]^2);;
+
+Print("Answer is: ", Product(pythag_list[1]));
