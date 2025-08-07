@@ -1,0 +1,29 @@
+#What is the 10001st prime number?
+
+IsPrimeNum := function(n)
+  if not ForAny([2..RootInt(n)], i -> n mod i = 0) then
+    return true;
+  else
+    return false;
+  fi;
+end;
+
+NthPrime := function(N)
+  local num, i;
+
+  if N = 1 then
+    return 2;
+  else
+    i := 2;;
+    num := 3;;
+    while i < N do
+      num := num + 2;;
+      if IsPrimeNum(num) then
+        i := i+1;;
+      fi;
+    od;
+    return num;
+  fi;
+end;
+
+Print(NthPrime(10001));
