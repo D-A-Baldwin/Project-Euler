@@ -1,0 +1,24 @@
+# What is the largest prime factor of the number 600851475143?
+
+big_num := 600851475143;;
+
+# We only need to check up to the square root.
+# The factors come in pairs, so that if x is a factor of y so too is y/x.
+
+N := RootInt(big_num);; # integer part of the square root
+
+IsPrimeNum := function(n)
+  if not ForAny([2..RootInt(n)], i -> n mod i = 0) then
+    return true;
+  else
+    return false;
+  fi;
+end;
+
+for i in [2..N] do
+  if (big_num mod i = 0) and IsPrimeNum(i) then
+      max_factor := i;;
+  fi;
+od;
+
+Print("The largest prime factor of ",big_num," is ",max_factor);
