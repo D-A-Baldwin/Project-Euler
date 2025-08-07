@@ -1,0 +1,27 @@
+# What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
+
+IsDivisibleByAllInList := function(N, div_list)
+  return ForAll(div_list, i -> N mod i = 0);
+end;
+
+# In order to be divisible by 2 and 5 number must end in 0. In order to be divisible by 3, 
+# sum of digits must be divisible by 3. Use these rules to reduce the search a bit
+
+starting_num := 2500;;
+upper_bound := 1000000000;;
+
+not_found_ind := true;
+while not_found_ind do
+  if IsDivisibleByAllInList(starting_num, [1..20]) then
+    Print("Answer is: ", starting_num);
+    not_found_ind := false;;
+  elif starting_num > upper_bound then
+    Print("Answer not found, increase bound");
+    not_found_ind := false;;
+  else
+    starting_num := starting_num + 10;;
+    while not Sum(ListOfDigits(starting_num)) mod 3 = 0 do
+      starting_num := starting_num + 10;;
+    od;
+  fi;
+od;
