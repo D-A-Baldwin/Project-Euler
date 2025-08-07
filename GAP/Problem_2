@@ -1,0 +1,14 @@
+# By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
+
+a := 1;; b := 2;;
+N := 4000000;;
+
+fib_seq := [a,b];;
+i := 3;;
+
+while fib_seq[i-2] + fib_seq[i-1] < N do
+  Add(fib_seq, fib_seq[i-2] + fib_seq[i-1]);
+  i := i+1;;
+od;
+
+fib_seq_evensum := Sum(Filtered(fib_seq, x -> x mod 2 = 0));
