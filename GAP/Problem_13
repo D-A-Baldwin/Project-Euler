@@ -114,11 +114,9 @@ end;
 FirstNDigitsOfSum := function(list_to_sum, N)
   local list_of_lists_of_digits, list_of_sum;
 
-  list_of_lists_of_digits := List(list_to_sum, i -> ListOfDigits(i){[1..N]});
+  sum := Sum(list_to_sum);
 
-  list_of_sum := ListOfDigits(Sum(List(list_of_lists_of_digits, i -> NumberFromList(i,10))));
-
-  return NumberFromList(list_of_sum{[1..N]}, 10);
+  return NumberFromList(ListOfDigits(sum){[1..N]}, 10);
 end;
 
 
