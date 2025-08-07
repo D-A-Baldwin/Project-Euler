@@ -1,0 +1,60 @@
+### My solution here feels rather messy but it works.
+
+# If all the numbers from 1 to 1000 (one thousand) inclusive were written out in words, how many letters would be used?
+
+NumberFromList := function(list, base)  
+  local sum, i;
+  sum := 0;
+  for i in [0..Length(list)-1] do
+    sum := sum + (Reversed(list)[i+1] * base^i);
+  od;
+  return sum;
+end;
+
+LettersInNumber := function(num)
+  local 1_to_19_strings, tens_strings, num_digits, word;
+
+  1_to_19_strings := ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", 
+                        "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+                        "seventeen", "eighteen", "nineteen"];;
+  tens_strings := ["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];;
+
+  num_digits := ListOfDigits(num);
+
+  word := [];
+  if num = 0 then
+    Add(word, "zero");
+  elif Length(num_digits) = 1 then
+    Add(word, 1_to_19_strings[num_digits[1]]);
+  elif Length(num_digits) = 2 and num_digits[1] = 1 then
+    Add(word, 1_to_19_strings[num]);
+  elif Length(num_digits) = 2 then
+    Add(word, tens_strings[num_digits[1]-1]);
+    if not num_digits[2] = 0 then
+      Add(word, 1_to_19_strings[num_digits[2]]);
+    fi;
+  elif Length(num_digits) = 3  then
+    Add(word, 1_to_19_strings[num_digits[1]]);
+    Add(word, "hundred");
+    if not ForAll(num_digits{[2,3]}, i-> i=0) then
+      Add(word, "and");
+    fi;
+    if num_digits[2] = 1 then
+      Add(word, 1_to_19_strings[NumberFromList(num_digits{[2,3]}, 10)]);
+    elif num_digits[2] > 1 then
+      Add(word, tens_strings[num_digits[2]-1]);
+      if not num_digits[3] = 0 then
+        Add(word, 1_to_19_strings[num_digits[3]]);
+      fi;
+    elif num_digits[3] >=1 then
+      Add(word, 1_to_19_strings[num_digits[3]]);
+    fi;
+  elif Length(num_digits) = 4 then
+    Add(word, "one");
+    Add(word, "thousand");
+  fi;
+
+  return Sum(List(word, subword -> Length(List([1..Length(subword)], i-> [subword[i]]))));;
+end;
+
+Print("Answer is: ", Sum(List([1..1000], LettersInNumber))); 
