@@ -1,0 +1,26 @@
+# Which starting number, under one million, produces the longest chain using the rules of the Collatz conjecture?
+
+CollatzChain := function(start_num)
+  local chain, i;
+
+  chain := [start_num];
+  i := 1;
+  while not chain[i] = 1 do
+    if chain[i] mod 2 = 0 then
+      Add(chain, chain[i] / 2);
+    else
+      Add(chain, 3*chain[i] + 1);
+    fi;
+
+    i := i+1;
+  od;
+
+  return chain;
+end;
+
+N := 1000000;;
+chain_lengths := List(List([1..N], CollatzChain), Length);;
+
+max_pos := Position(chain_lengths, Maximum(chain_lengths));
+
+Print("Answer is: ", [1..N][max_pos]);
