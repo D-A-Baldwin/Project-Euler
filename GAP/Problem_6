@@ -1,0 +1,9 @@
+# Find the difference between the sum of the squares of the first one 
+# hundred natural numbers and the square of the sum.
+
+N := 100;;
+
+sum_of_squares := Sum(List([1..N], i -> i^2));;
+square_of_sum := Sum([1..N])^2;;
+
+Print("Answer is: ", square_of_sum - sum_of_squares);
