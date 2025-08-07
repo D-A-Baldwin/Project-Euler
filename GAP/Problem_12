@@ -1,0 +1,41 @@
+# What is the value of the first triangle number to have over five hundred divisors?
+
+NthTriangularNumber := function(N)
+  return Sum([1..N]);
+end;
+
+NumberOfFactors := function(num) 
+  local root, count, i; 
+  if IsSquareInt(num) then
+    root := RootInt(num);;
+    count := 0;;
+    for i in [1..root-1] do
+      if num mod i = 0 then
+        count := count+1;;
+      fi;
+    od;
+    return 2*count + 1;
+  else
+    root := RootInt(num);;
+    count := 0;;
+    for i in [1..root] do
+      if num mod i = 0 then
+        count := count+1;;
+      fi;
+    od;
+    return 2*count;
+  fi;
+end;
+
+i := 1;;
+upper_bound := 100000;;
+while NumberOfFactors(NthTriangularNumber(i)) <= 500 do
+  if i = upper_bound then
+    Print("No answer found, increase bound");
+    return;
+  else
+    i := i+1;;
+  fi;
+od;
+
+Print("Answer is: ", NthTriangularNumber(i));
