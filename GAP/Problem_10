@@ -1,0 +1,13 @@
+# Find the sum of all the primes below two million.
+
+IsPrimeNum := function(n)
+  if not ForAny([2..RootInt(n)], i -> n mod i = 0) then
+    return true;
+  else
+    return false;
+  fi;
+end;
+
+prime_list := Filtered([1..2000000], IsPrime);;
+
+Print("Answer is: ", Sum(prime_list));
