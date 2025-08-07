@@ -1,0 +1,32 @@
+# Find the largest palindrome made from the product of two 3-digit numbers.
+
+IsPalindrome := function(num)
+  local dig_list;
+  dig_list := ListOfDigits(num);
+  return dig_list = Reversed(dig_list);
+end;
+
+upper_bound := 999;;
+lower_bound := 900;;
+3_dig_pair_list := DuplicateFreeList(List(Cartesian(
+                    [lower_bound..upper_bound],[lower_bound..upper_bound]), SortedList));;
+3_dig_products := List(3_dig_pair_list, Product);;
+
+SortParallel(3_dig_products, 3_dig_pair_list);
+
+palindrome_not_found := true;;
+i := Length(3_dig_pair_list);;
+
+while palindrome_not_found do
+  3_dig_pair := 3_dig_pair_list[i];;
+  3_dig_product := 3_dig_products[i];
+  if IsPalindrome(3_dig_product) then
+    Print("Largest palindrome is ", 3_dig_product, " made from ", 3_dig_pair);
+    palindrome_not_found := false;
+  elif i = 1 then
+    Print("Palindrome not found, increase bounds");
+    palindrome_not_found := false;
+  else
+    i := i-1;;
+  fi;
+od;
