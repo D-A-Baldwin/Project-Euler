@@ -1,0 +1,39 @@
+# Evaluate the sum of all the amicable numbers under 10000.
+
+SumOfDivisors := function(num) 
+  local root, divisors, i; 
+  divisors := [];
+  if IsSquareInt(num) then
+    root := RootInt(num);;
+    Add(divisors, root);
+    for i in [1..root-1] do
+      if num mod i = 0 then
+        Add(divisors, i);
+        Add(divisors, num/i);
+      fi;
+    od;
+    Remove(divisors, Position(divisors,num));
+    return Sum(divisors);
+  else
+    root := RootInt(num);;
+    for i in [1..root] do
+      if num mod i = 0 then
+        Add(divisors, i);
+        Add(divisors, num/i);
+      fi;
+    od;
+    Remove(divisors, Position(divisors,num));
+    return Sum(divisors);
+  fi;
+end;
+
+IsAmicable := function(num)
+  if SumOfDivisors(SumOfDivisors(num)) = num and
+     not SumOfDivisors(num) = num then
+    return true;
+  else
+    return false;
+  fi;
+end;
+
+Print("Answer is: ", Sum(Filtered([1..10000], IsAmicable)));
