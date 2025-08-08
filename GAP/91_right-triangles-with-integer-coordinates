@@ -1,0 +1,64 @@
+# Given that 0<= x1, y1, x2, y2 <=50 how many right triangles can be formed?
+
+# We simply create a list of all possible coordinates for the triangles
+# and check if they satisfy the Pythagorean theorem.
+# There are four possibilities, the right angle sits at the origin,
+# it sits on the x-axis, it sits at the y-axis or it sits out in the
+# middle of the plane. We work out all the possible coordinates for
+# these four possibilities.
+
+IsPythagTriple := function(coords)
+  local triple, side_lengths_squared;
+  triple := [coords[1], coords[2], 
+              [AbsInt(coords[1][1] - coords[2][1]),
+              AbsInt(coords[1][2] - coords[2][2])]];;
+
+  side_lengths_squared := SortedList(List(triple, i-> i[1]^2 + i[2]^2));
+
+  return side_lengths_squared[1] + side_lengths_squared[2] = 
+          side_lengths_squared[3];
+end;
+
+N := 50;;
+coords_RA_at_origin := [];;
+for i in [1..N] do
+  for j in [1..N] do
+    Add(coords_RA_at_origin, [[0,i],[j,0]]);
+  od;
+od;
+
+coords_RA_on_x_axis := [];;
+for i in [1..N] do
+  for j in [1..N] do
+    Add(coords_RA_on_x_axis, [[i,0],[i,j]]);
+  od;
+od;
+
+coords_RA_on_y_axis := [];;
+for i in [1..N] do
+  for j in [1..N] do
+    Add(coords_RA_on_x_axis, [[0,i],[j,i]]);
+  od;
+od;
+
+coords_RA_in_plane := [];;
+for i in [1..N] do
+  for j in [1..N] do
+    for k in [0..N] do
+      # condition that the lines forming the right
+      # angle are orthogonal.
+      l := j - (i/j)*(k - i); 
+      if (l>=0) and (l<=N) and IsInt(l) and (not [i,j]=[k,l]) then 
+        Add(coords_RA_in_plane, [[i,j],[k,l]]);
+      fi;
+    od;
+  od;
+od;
+
+coords_list := [];; 
+Append(coords_list,coords_RA_at_origin);
+Append(coords_list,coords_RA_on_x_axis);
+Append(coords_list,coords_RA_on_y_axis);
+Append(coords_list,coords_RA_in_plane);
+
+Print("Answer is: ", Length(Filtered(coords_list, IsPythagTriple)));
