@@ -1,0 +1,33 @@
+# Given that 0<= x1, y1, x2, y2 <=50 how many right triangles can be formed?
+
+# We simply count all non-equivalent triples of numbers from [0..50]
+# and check if they satisfy the Pythagorean theorem.
+
+IsPythagTriple := function(coords)
+  local triple, side_lengths_squared;
+  triple := [coords[1], coords[2], 
+              [AbsInt(coords[1][1] - coords[2][1]),
+              AbsInt(coords[1][2] - coords[2][2])]];;
+
+  side_lengths_squared := SortedList(List(triple, i-> i[1]^2 + i[2]^2));
+
+  return side_lengths_squared[1] + side_lengths_squared[2] = 
+          side_lengths_squared[3];
+end;
+
+N := 2;;
+
+coords_list := [];
+for i in [0..N] do
+  for j in [0..N] do
+    for k in [i..N] do
+      for l in [0..N] do
+        if (not [i,j] = [k,l]) and (not [i,j] = [0,0]) then
+          Add(coords_list, [[i,j],[k,l]]);
+        fi;
+      od;
+    od;
+  od;
+od;
+
+Print("Answer is: ", Length(Filtered(coords_list, IsPythagTriple)));
