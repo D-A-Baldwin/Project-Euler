@@ -1,0 +1,16 @@
+# Find the sum of the digits in the number 100!
+
+# We can remove any factors of 10, since these only add zeroes to the end of the number. 
+# This isn't strictly necessary, as GAP can handle 100! easily.
+
+DivByTen := function(num)
+  if num mod 10 = 0 then
+    return num/10;
+  else
+    return num;
+  fi;
+end;
+
+num_list := List([1..100], i -> DivByTen(i));;
+
+Print("Answer is: ", Sum(ListOfDigits(Product(num_list))));
