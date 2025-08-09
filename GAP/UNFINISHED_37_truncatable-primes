@@ -1,0 +1,71 @@
+# Find the sum of the only eleven primes that are both 
+# truncatable from left to right and right to left.
+
+IsPrimeNum := function(n)
+  if not ForAny([2..RootInt(n)], i -> n mod i = 0) then
+    return true;
+  else
+    return false;
+  fi;
+end;
+
+NumberFromList := function(list, base)  
+  local sum, i;
+  sum := 0;
+  for i in [0..Length(list)-1] do
+    sum := sum + (Reversed(list)[i+1] * base^i);
+  od;
+  return sum;
+end;
+
+IsTruncatableRightToLeft := function(num)
+  local num_dig_list, true_list, i;
+  
+  num_dig_list := ListOfDigits(num);
+  
+  if IsPrimeNum(num) and not Length(num_dig_list) = 1 then
+    true_list := [];
+    for i in [1..Length(num_dig_list)-1] do
+      Add(true_list, IsPrimeNum(
+            NumberFromList(
+            num_dig_list{[1..Length(num_dig_list)-i]}, 10)
+          ));
+    od;
+    if ForAll(true_list, i -> i=true) then
+      return true;
+    else
+      return false;
+    fi;
+  else 
+    return false;
+  fi;
+end;
+
+IsTruncatableLeftToRight := function(num)
+  local num_dig_list, true_list, i;
+  
+  num_dig_list := ListOfDigits(num);
+  
+  if IsPrimeNum(num) and not Length(num_dig_list) = 1 then
+    true_list := [];
+    for i in [1..Length(num_dig_list)-1] do
+      Add(true_list, IsPrimeNum(
+            NumberFromList(
+            num_dig_list{[i+1..Length(num_dig_list)]}, 10)
+          ));
+    od;
+    if ForAll(true_list, i -> i=true) then
+      return true;
+    else
+      return false;
+    fi;
+  else 
+    return false;
+  fi;
+end;
+
+IsTruncatable := function(num) 
+  return ForAll([IsTruncatableLeftToRight(num), 
+            IsTruncatableRightToLeft(num)], i-> i=true);
+end;
+  
