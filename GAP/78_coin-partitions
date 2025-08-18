@@ -3,6 +3,9 @@
 # Further down are initial naive attempts that proved too slow. The key
 # is that I don't need the partitions themselves, just the number of 
 # them. Therefore I can make use of the pentagonal number theorem.
+# I also learned a fair bit about the difference between recursion 
+# and iteration, my early attempts used a function that called itself
+# which was way too slow.
 
 IntegerPartitions_Pentagonal := function(n)
 	local p, x, k, index_list, m;
