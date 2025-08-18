@@ -4,8 +4,49 @@
 # is that I don't need the partitions themselves, just the number of 
 # them. Therefore I can make use of the pentagonal number theorem.
 
+IntegerPartitions_Pentagonal := function(n)
+	local p, x, k, index_list, m;
 
-
+	if n < 0 then
+		return "Integer must be non-negative";
+	elif n = 0 then
+		return 1;
+	elif n = 1 then
+		return 1;
+	fi;
+	
+	p := [1,1]; # the values for 0 and 1
+	
+	
+	for m in [2..n] do
+		p[m+1] := 0;
+			
+		# create list of pentagonal numbers
+		x := 1;
+		k := 1;
+		index_list := [];
+		while m - x >= 0 do
+			Add(index_list, k);
+			if k>0 then
+				k := -k;
+			else 
+				k := -k + 1;
+			fi;
+			x := k*(3*k - 1)/2;
+		od;
+		
+		for k in index_list do
+			p[m+1] := p[m+1] + 
+					(-1)^(k-1) * p[m - k*(3*k - 1)/2 + 1];
+		od;
+		if p[m+1] mod 10^6 = 0 then
+			Print("Answer is: ", m);
+			return;
+		fi;
+	od;
+	
+	return "Not found";
+end;
 
 #######
 # 1: INITIAL NAIVE APPROACH. TOO SLOW TO WORK.
