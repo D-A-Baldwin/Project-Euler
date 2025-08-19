@@ -1,0 +1,46 @@
+# How many different ways can one hundred be written as a 
+# sum of at least two positive integers?
+
+# I solved problem 78 first, so this is just taking code from there.
+
+IntegerPartitions_Pentagonal := function(n)
+	local p, x, k, index_list, m;
+
+	if n < 0 then
+		return "Integer must be non-negative";
+	elif n = 0 then
+		return 1;
+	elif n = 1 then
+		return 1;
+	fi;
+	
+	p := [1,1]; # the values for 0 and 1
+	
+	
+	for m in [2..n] do
+		p[m+1] := 0;
+			
+		# create list of pentagonal numbers
+		x := 1;
+		k := 1;
+		index_list := [];
+		while m - x >= 0 do
+			Add(index_list, k);
+			if k>0 then
+				k := -k;
+			else 
+				k := -k + 1;
+			fi;
+			x := k*(3*k - 1)/2;
+		od;
+		
+		for k in index_list do
+			p[m+1] := p[m+1] + 
+					(-1)^(k-1) * p[m - k*(3*k - 1)/2 + 1];
+		od;
+	od;
+	return p[n+1];
+end;
+
+# take one away to remove the trivial partition.
+Print("Answer is: ", IntegerPartitions_Pentagonal(100) - 1); 
