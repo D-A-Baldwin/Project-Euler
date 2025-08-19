@@ -2,7 +2,9 @@
 # truncatable from left to right and right to left.
 
 IsPrimeNum := function(n)
-  if not ForAny([2..RootInt(n)], i -> n mod i = 0) then
+  if n = 1 then
+    return false;
+  elif not ForAny([2..RootInt(n)], i -> n mod i = 0) then
     return true;
   else
     return false;
@@ -18,7 +20,9 @@ NumberFromList := function(list, base)
   return sum;
 end;
 
-IsTruncatableRightToLeft := function(num)
+IsTruncatableRL := function(num)
+  # Outputs true if num is a truncatable prime
+  # from right to left and false otherwise.
   local num_dig_list, true_list, i;
   
   num_dig_list := ListOfDigits(num);
@@ -41,7 +45,9 @@ IsTruncatableRightToLeft := function(num)
   fi;
 end;
 
-IsTruncatableLeftToRight := function(num)
+IsTruncatableLR := function(num)
+  # Outputs true if num is a truncatable prime
+  # from left to right and false otherwise.
   local num_dig_list, true_list, i;
   
   num_dig_list := ListOfDigits(num);
@@ -65,7 +71,14 @@ IsTruncatableLeftToRight := function(num)
 end;
 
 IsTruncatable := function(num) 
-  return ForAll([IsTruncatableLeftToRight(num), 
-            IsTruncatableRightToLeft(num)], i-> i=true);
+  return ForAll([IsTruncatableLR(num), 
+            IsTruncatableRL(num)], i-> i=true);
 end;
+
+
+# Now can just do a search through (since we know there are only 11, we
+# can stop when we reach that many), this is unnecessarily slow but does the job.
   
+all_truncatables := Filtered([1..10^6], IsTruncatable); # this gives a list of 11 primes
+
+Print("Answer is: ", Sum(all_truncatables));
