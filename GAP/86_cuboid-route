@@ -1,0 +1,86 @@
+# Find the least value of M such that the number of
+# solutions first exceeds one million.
+
+# The key to this problem is to look at the net of
+# the cuboid (i.e. unfold it).
+
+# If the three sides of the cuboid have lengths
+# a, b, c with a <= b <= c, then there are three
+# routes from S to F. We call the squared lengths
+# of these routes l1, l2, l3.
+# The lengths are given by Pythag.
+# l1 := a^2 + (b+c)^2;
+# l2 := (a+b)^2 + c^2;
+# l3 := (a+c)^2 + b^2;
+# If a <= b <= c then l2 is <= l3 or l1. So we
+# need only consider l2. The route has integer
+# length if l2 is a square number.
+
+NumberOfIntegerCuboidRoutes := function(M)
+  local count, a, b, c, l2;
+  count := 0;
+  for a in [1..M] do
+    for b in [a..M] do
+      for c in [b..M] do
+        l2 := (a+b)^2 + c^2; 
+        if IsSquareInt(l2) then
+          count := count + 1;
+        fi;
+      od;
+    od;
+  od;
+  return count;
+end;
+
+# find the answer by trial and error, this is slow but works.
+t1 := Runtime();;
+NumberOfIntegerCuboidRoutes(1817);
+NumberOfIntegerCuboidRoutes(1818);
+t2 := Runtime();;
+Print("Time taken: ", t2 - t1);
+
+
+###### Having read the thread, an easy way to speed up is to replace a+b
+# with x and then multiply the answer by the number of a<=b such that
+# a+b = x.
+
+
+NumberOfIntegerCuboidRoutesNew := function(max_length)
+  local count, x, c;
+  count := 0;
+  for c in [1..max_length] do # c is the longest side
+    for x in [1..2*c] do # x is (a+b) and this enforces a<=b<=c
+      if IsSquareInt(c^2 + x^2) then # tests if l2 is square
+        if x <= c then 
+          # the number of (a,b) such that a<=b<c.
+          # all possible (a,b) are allowed here.
+          # e.g. if c=6 and x=5 then (a,b) = (1,4),(2,3)
+          count := count + Int(x/2); 
+        else
+          # if x > c then not all (a,b) are allowed
+          # e.g. if c=6 and x=7 then (a,b) = (1,6)
+          # isn't allowed but (2,5) and (3,4) are
+          # We require that the smallest side, a, is
+          # >= x-c so that b<= c.
+          # The number of possible a such that
+          # x-c <= a <= c is c - (x-c) + 1 = 
+          # 2c - x + 1. We must divide this by 2
+          # to avoid overcounting in the loop which
+          # gives c - Int((x-1)/2)
+          count := count + (c - Int((x-1)/2));
+        fi;
+      fi;
+    od;
+  od;
+  return count;
+end;
+
+t1 := Runtime();;
+M := 1000;
+while NumberOfIntegerCuboidRoutesNew(M) < 10^6 do
+  M := M + 1;
+od;
+Print("Answer is: ", M, "\n");
+t2 := Runtime();;
+Print("Time taken: ", t2 - t1);
+
