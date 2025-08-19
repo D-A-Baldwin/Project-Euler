@@ -1,0 +1,50 @@
+# What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
+
+IsPrimeNum := function(n)
+  if not ForAny([2..RootInt(n)], i -> n mod i = 0) then
+    return true;
+  else
+    return false;
+  fi;
+end;
+
+SmallestNonGolbachOddComposite := function()
+  local IsGoldbach, N;
+
+  IsGoldbach := function(n)
+    local false_ind, primes_to_n, i, s, p;
+    false_ind := 0;
+    primes_to_n := Filtered([1..n], IsPrimeNum);
+    for i in primes_to_n do
+      if IsInt((n - i)/2) then
+        if IsSquareInt((n - i)/2) then
+          p := i;
+          s := (n - i)/2;
+          break;
+        else
+          false_ind := false_ind + 1;
+        fi;
+      else
+        false_ind := false_ind + 1;
+      fi;
+    od;
+
+    if false_ind < Length(primes_to_n) then
+      return true;
+    else
+      return false;
+    fi;
+  end;
+
+  N := 3;
+  while IsGoldbach(N) do
+    N := N+2;
+    if IsPrimeNum(N) then
+      N := N+2;
+    fi;
+  od;
+
+  return N;
+end;
+
+Print("Answer is: ", SmallestNonGolbachOddComposite());
