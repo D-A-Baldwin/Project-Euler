@@ -1,0 +1,42 @@
+# Find the sum of all numbers, less than one million, which are palindromic in base 
+# 10 and base 2.
+
+ListFromNumber := function(num, base)
+  local digits;
+  digits := [];
+  while num > 0 do
+    Add(digits, num mod base);
+    num := Int(num/base);
+  od;
+  return Reversed(digits);
+end;
+
+NumberFromList := function(list, base)
+  local sum, i;
+  sum := 0;
+  for i in [0..Length(list)-1] do
+    sum := sum + (Reversed(list)[i+1] * base^i);
+  od;
+  return sum;
+end;
+
+IsPalindromeBase10and2 := function(num)
+  local num_b10, num_b2;
+  num_b10 := ListFromNumber(num, 10);
+  num_b2 := ListFromNumber(NumberFromList(num_b10, 10),2);
+
+  return num_b10 = Reversed(num_b10) and num_b2 = Reversed(num_b2);
+end;
+
+pal_list := [];
+
+n := 1;
+
+while n < 10^6 do
+  if IsPalindromeBase10and2(n) then
+    Add(pal_list, n);
+  fi;
+  n := n+1;
+od;
+
+Print("Answer is: ", Sum(pal_list));
