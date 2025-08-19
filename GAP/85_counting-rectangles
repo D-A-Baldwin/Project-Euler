@@ -27,6 +27,7 @@ NumberOfRectanglesInGrid := function(N,M)
   return count;
 end;
 
+
 N_M_list := [];
 for N in [1..2700] do
   for M in [N..2700] do
@@ -35,6 +36,7 @@ for N in [1..2700] do
 od;
 N_M_list := Filtered(N_M_list, i-> AbsInt(i[1] - 2700) < 100);;
 
+time1 := Runtime();
 lengths := [];
 for N_M in N_M_list do
   N := N_M[2][1];
@@ -45,4 +47,31 @@ od;
 
 ans_pos := Position(List(lengths, i-> i[1]), Minimum(List(lengths, i-> i[1])));
 
-Print("Answer is: ", Product(lengths[ans_pos][2]));
+Print("Answer is: ", Product(lengths[ans_pos][2]), "\n");
+Print("Time taken: ", Runtime()-time1);
+####### Alternative analytic solution (found from reading the PE thread)
+
+# An NxM grid has N+1 horizontal lines and M+1 vertical lines.
+# Any rectangle inside this grid is made from two vertical lines
+# and 2 horizontal lines. Thus the total number of rectangles is
+# N+1C2 = (N+1)! / (2!(N-1)!) = N(N+1)/2. So the total number of 
+# rectangles is NM(N+1)(M+1)/4. Much simpler!
+
+NumberOfRectanglesInGridNew := function(N,M)
+  return N*M*(N+1)*(M+1)/4;
+end;
+
+time1 := Runtime();
+lengths_new := [];
+for N_M in N_M_list do
+  N := N_M[2][1];
+  M := N_M[2][2];
+  Add(lengths_new, [AbsInt(NumberOfRectanglesInGridNew(N,M)
+        - 2*10^6), [N,M]]);
+od;
+
+ans_pos := Position(List(lengths_new, i-> i[1]), 
+              Minimum(List(lengths_new, i-> i[1])));
+
+Print("Answer is: ", Product(lengths_new[ans_pos][2]), "\n");
+Print("Time taken: ", Runtime()-time1);
