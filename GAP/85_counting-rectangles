@@ -1,0 +1,48 @@
+# Although there exists no rectangular grid that contains exactly 
+# two million rectangles, find the area of the grid with the 
+# nearest solution.
+
+# Experiments show that grids with areas close to 2770 give answers
+# close to 2*10^6
+
+NumberOfRectanglesInGrid := function(N,M)
+  local count, i, j, k, l;
+  count := 0;
+  # Counts how many ixj rectangles can fit into
+  # a NxM grid. The first two loops describe
+  # the size of the rectangle and the last two
+  # count how many ways it can be shifted around
+  # the grid. 
+  
+  for i in [1..N] do
+    for j in [1..M] do
+      for k in [1..N-i+1] do
+        for l in [1..M-j+1] do
+          count := count + 1;
+        od;
+      od;
+    od;
+  od;
+  
+  return count;
+end;
+
+N_M_list := [];
+for N in [1..2700] do
+  for M in [N..2700] do
+    Add(N_M_list, [N*M, [N,M]]);
+  od;
+od;
+N_M_list := Filtered(N_M_list, i-> AbsInt(i[1] - 2700) < 100);;
+
+lengths := [];
+for N_M in N_M_list do
+  N := N_M[2][1];
+  M := N_M[2][2];
+  Add(lengths, [AbsInt(NumberOfRectanglesInGrid(N,M)
+        - 2*10^6), [N,M]]);
+od;
+
+ans_pos := Position(List(lengths, i-> i[1]), Minimum(List(lengths, i-> i[1])));
+
+Print("Answer is: ", Product(lengths[ans_pos][2]));
