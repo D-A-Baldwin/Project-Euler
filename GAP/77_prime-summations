@@ -1,0 +1,50 @@
+# What is the first value which can be written as the sum of primes in over five thousand different ways?
+
+# I solved problem 78 first, so this uses code from there.
+
+# From "FAST ALGORITHMS FOR GENERATING INTEGER PARTITIONS"
+# ANTOINE ZOGHBI and IVAN STOJMENOVIC
+
+IntegerPartitions_ZOGHBI := function(n)
+	
+	local x_list, m, h, r, t, partitions;
+	
+	x_list := List([1..n], i -> 1);
+	x_list[1] := n;
+	m := 1;
+	h := 1;
+	partitions := [[x_list[1]]];
+	
+	while x_list[1] <> 1 do
+		if x_list[h] = 2 then	
+			m := m + 1;
+			x_list[h] := 1;
+			h := h - 1;
+		else
+			r := x_list[h] - 1;
+			t := m - h + 1;
+			x_list[h] := r;
+			
+			while t >= r do
+				h := h + 1;
+				x_list[h] := r;
+				t := t - r;
+			od;
+			
+			if t = 0 then
+				m := h;
+			else
+				m := h + 1;
+				if t > 1 then
+					h := h + 1; 	
+					x_list[h] := t;
+				fi;
+			fi;
+		fi;
+		Add(partitions, x_list{[1..m]});
+	od;
+	return partitions;
+end;
+
+N := 71;
+Length(Filtered(IntegerPartitions_ZOGHBI(N), i -> ForAll(i, IsPrimeNum)));
